@@ -1,0 +1,38 @@
+h1. trix: Realtime audio over IP
+
+trix is a simple toolset for broadcasting live audio from Linux or macOS. It sends and receives encoded audio over IP networks, via an audio interface. If audio interfaces are properly configured, a low-latency point-to-point or multicast broadband audio connection can be achieved. This could be used for networked music performances.
+
+Audio Transmitter/Receiver over Ip eXchange is based on "trx":http://www.pogo.org.uk/~mark/trx/ by "Mark Hills":mailto:mark@xwax.org . The main difference being that it supports ALSA (Linux), PulseAudio (Linux) and CoreAudio (macOS) thanks to the inclusion of the intermediate  "rtAudio":https://www.music.mcgill.ca/~gary/rtaudio/ library.
+
+h2. Dependencies
+
+* "rtAudio":https://www.music.mcgill.ca/~gary/rtaudio/
+* "oRTP library":http://www.linphone.org/technical-corner/ortp/overview
+* "Opus audio codec":https://www.opus-codec.org/
+
+To compile, these dependencies need to be installed. On Debian like systems this can be done with 
+@sudo apt-get install libortp-dev libopus-dev libpulse-dev@
+
+For macOS, first install "homebrew":https://brew.sh/ and then install the following:  
+
+@brew install opus ortp@
+
+h2. Testing
+
+In order to test the setup trix_streamer is able to stream an audio file over the network. It needs a raw, headerless audio file in a certain format. To create such audio file, open an audio file in "Audacity":https://www.audacityteam.org/ set project rate to 48kHz, and export the audio as __float 32bit headerless__ raw file. Alternatively, "SoX":http://sox.sourceforge.net/Docs/Documentation, a command line audio editor, can be used to create such a file: @sox input.mp3  −r 48k −e float −b 32 −c 2 output.raw@
+
+If there is a stream playing and you want to receive it ffplay can be used. ffplay is a program from the "ffmpeg":http://ffmpeg.org family.
+
+@ffplay -nodisp -protocol_whitelist rtp,file,udp doc/stereo_session_definition.sdp@
+
+To configure the ip address of the receiver or the RTP payload type, the source code needs to be modified and recompilation is needed.
+
+h2. Status 
+
+This is a working proof of concept which is tested on several systems. To use this software you need to be able to read and compile source code. 
+
+h2. Credits
+
+Based on the work "trx":http://www.pogo.org.uk/~mark/trx/ by Mark Hill, trix was developed by Joren Six. trix is distributed under the same GPL license as trx.
+
+
